@@ -4,6 +4,11 @@ package mx.itson.cheems.views;
 // @author Andrey
 
 import com.google.gson.Gson;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import mx.itson.cheems.entities.User;
 
 
@@ -41,11 +46,11 @@ public class UserForm extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
 
         txtName.setBackground(new java.awt.Color(255, 255, 255));
-        txtName.setFont(new java.awt.Font("Showcard Gothic", 0, 14)); // NOI18N
+        txtName.setFont(new java.awt.Font("Impact", 0, 14)); // NOI18N
         txtName.setForeground(new java.awt.Color(102, 102, 255));
 
         txtAccount.setBackground(new java.awt.Color(255, 255, 255));
-        txtAccount.setFont(new java.awt.Font("Showcard Gothic", 0, 14)); // NOI18N
+        txtAccount.setFont(new java.awt.Font("Impact", 0, 14)); // NOI18N
         txtAccount.setForeground(new java.awt.Color(102, 102, 255));
 
         jLabel1.setFont(new java.awt.Font("Showcard Gothic", 0, 18)); // NOI18N
@@ -95,7 +100,7 @@ public class UserForm extends javax.swing.JFrame {
                 .addComponent(txtAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(65, 65, 65)
                 .addComponent(btnOk)
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -106,7 +111,7 @@ public class UserForm extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -116,20 +121,46 @@ public class UserForm extends javax.swing.JFrame {
     
     // Evento del boton OK cuando se le da clic
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
-        
-        // Importacion de la entidad User
-        User user = new User();
-        
-        // Se consiguen los textos ingresados
-        user.setName(txtName.getText());
-        user.setAccount(txtAccount.getText());
-        
-        // Importacion de Gson
-        Gson gson = new Gson();
-        
-        // Metodo toJson de Gson para convertir el texto ingresado (String) a un Json
-        String json = gson.toJson(user);
-        
+                                                  
+        try {
+            // Lectura de campos de texto
+            String name = txtName.getText();
+            String account = txtAccount.getText();
+
+            // Creación y asignación de la entidad
+            User user = new User();
+            user.setName(name);
+            user.setAccount(account);
+
+            // Conversión a JSON
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+
+            // Creación de la solicitud HTTP
+            HttpRequest request = HttpRequest
+                    .newBuilder()
+                    .uri(URI.create("http://127.0.0.1:8000/user"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            // Creación del cliente HTTP
+            HttpClient client = HttpClient.newHttpClient();
+
+            // Envío y respuesta
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println("Respuesta (Status): " + response.statusCode());
+            System.out.println("Respuesta (Body): " + response.body());
+
+        } catch (IOException ex) {
+            System.err.println("Error de conexión o red: " + ex.getMessage());
+            ex.printStackTrace();
+        } catch (InterruptedException ex) {
+            System.err.println("La operación fue interrumpida: " + ex.getMessage());
+            Thread.currentThread().interrupt(); // Restaura el estado de interrupción del hilo
+        }
+ 
     }//GEN-LAST:event_btnOkActionPerformed
 
     
