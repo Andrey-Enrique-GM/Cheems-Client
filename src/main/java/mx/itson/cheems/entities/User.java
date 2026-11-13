@@ -47,6 +47,19 @@ public class User
     public void setAccount(String account) {
         this.account = account;
     }
+
+    
+    
+    public User(int id, String name, String account) {
+        this.id = id;
+        this.name = name;
+        this.account = account;
+    }
+
+    
+    
+    public User() {
+    }
     
     
     

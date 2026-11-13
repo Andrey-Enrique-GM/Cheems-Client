@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import mx.itson.cheems.entities.Result;
 import mx.itson.cheems.entities.User;
 
 
@@ -127,16 +128,17 @@ public class UserForm extends javax.swing.JFrame {
             String name = txtName.getText();
             String account = txtAccount.getText();
 
-            // Creación y asignación de la entidad
+            // Creacion y asignacion de la entidad
             User user = new User();
+            user.setId(1);
             user.setName(name);
             user.setAccount(account);
 
-            // Conversión a JSON
+            // Conversion a JSON usando GSON
             Gson gson = new Gson();
             String json = gson.toJson(user);
 
-            // Creación de la solicitud HTTP
+            // Creacion de la solicitud HTTP
             HttpRequest request = HttpRequest
                     .newBuilder()
                     .uri(URI.create("http://127.0.0.1:8000/user"))
@@ -144,21 +146,31 @@ public class UserForm extends javax.swing.JFrame {
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
 
-            // Creación del cliente HTTP
+            // Creacion del cliente HTTP
             HttpClient client = HttpClient.newHttpClient();
 
-            // Envío y respuesta
+            // Envio y respuesta
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("Respuesta (Status): " + response.statusCode());
-            System.out.println("Respuesta (Body): " + response.body());
+            System.out.println("Respuesta: " + response.body());
+            System.out.println("Codigo de estado: " + response.statusCode());
+
+            Result result = gson.fromJson(response.body(), Result.class);
+
+            if (result != null && result.isSuccess()) {
+                javax.swing.JOptionPane.showMessageDialog(this, result.getMessage(), "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                String errorMsg = (result != null) ? result.getMessage() : "Error desconocido en el servidor.";
+                javax.swing.JOptionPane.showMessageDialog(this, errorMsg, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
 
         } catch (IOException ex) {
             System.err.println("Error de conexión o red: " + ex.getMessage());
+            javax.swing.JOptionPane.showMessageDialog(this, "Error de conexión: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             ex.printStackTrace();
         } catch (InterruptedException ex) {
             System.err.println("La operación fue interrumpida: " + ex.getMessage());
-            Thread.currentThread().interrupt(); // Restaura el estado de interrupción del hilo
+            Thread.currentThread().interrupt();
         }
  
     }//GEN-LAST:event_btnOkActionPerformed
