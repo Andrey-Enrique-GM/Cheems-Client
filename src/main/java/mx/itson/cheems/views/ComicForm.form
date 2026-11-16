@@ -52,7 +52,11 @@
                   <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="btnOk" alignment="1" min="-2" pref="87" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="btnOk" min="-2" pref="100" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="btnLibrary" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <Component id="txtDescription" max="32767" attributes="0"/>
                           <Component id="txtTitle" alignment="0" max="32767" attributes="0"/>
                           <Component id="txtEditorial" alignment="0" pref="585" max="32767" attributes="0"/>
@@ -83,7 +87,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="txtEditorial" min="-2" pref="42" max="-2" attributes="0"/>
                   <EmptySpace pref="29" max="32767" attributes="0"/>
-                  <Component id="btnOk" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="btnOk" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnLibrary" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -225,6 +232,33 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Editorial:"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnLibrary">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="99" type="rgb"/>
+            </Property>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="OCR A Extended" size="36" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="66" red="33" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="LIBRARY"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
+                <BevelBorder>
+                  <Color PropertyName="highlightOuter" blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+                  <Color PropertyName="highlightInner" blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+                  <Color PropertyName="shadowOuter" blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+                  <Color PropertyName="shadowInner" blue="ff" green="0" id="blue" palette="1" red="0" type="palette"/>
+                </BevelBorder>
+              </Border>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLibraryActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

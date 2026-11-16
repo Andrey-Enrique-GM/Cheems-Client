@@ -43,6 +43,7 @@ public class ComicForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtEditorial = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        btnLibrary = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,6 +89,17 @@ public class ComicForm extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(255, 0, 255));
         jLabel4.setText("Editorial:");
 
+        btnLibrary.setBackground(new java.awt.Color(153, 255, 255));
+        btnLibrary.setFont(new java.awt.Font("OCR A Extended", 1, 36)); // NOI18N
+        btnLibrary.setForeground(new java.awt.Color(51, 102, 255));
+        btnLibrary.setText("LIBRARY");
+        btnLibrary.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.blue, java.awt.Color.blue, java.awt.Color.blue, java.awt.Color.blue));
+        btnLibrary.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLibraryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -100,7 +112,10 @@ public class ComicForm extends javax.swing.JFrame {
                 .addGap(85, 85, 85)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(btnOk, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnLibrary))
                         .addComponent(txtDescription)
                         .addComponent(txtTitle)
                         .addComponent(txtEditorial, javax.swing.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)
@@ -127,7 +142,9 @@ public class ComicForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtEditorial, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                .addComponent(btnOk)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnOk)
+                    .addComponent(btnLibrary))
                 .addGap(21, 21, 21))
         );
 
@@ -206,6 +223,17 @@ public class ComicForm extends javax.swing.JFrame {
 
     
     
+    // Evento del boton LIBRARY cuando se le da clic
+    private void btnLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLibraryActionPerformed
+        
+        ComicView library = new ComicView(this, true);
+        library.setLocationRelativeTo(this);
+        library.setVisible(true);
+        
+    }//GEN-LAST:event_btnLibraryActionPerformed
+
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -232,6 +260,7 @@ public class ComicForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLibrary;
     private javax.swing.JButton btnOk;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
