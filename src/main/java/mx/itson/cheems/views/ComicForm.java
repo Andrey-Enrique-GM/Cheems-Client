@@ -18,23 +18,50 @@ public class ComicForm extends javax.swing.JFrame {
     
     // Comic a modificar (null si se esta creando uno nuevo)
     private Comic comicToModify = null;
+    // Referencia a ComicView para refrescar la tabla al terminar de modificar
+    private ComicView parentView = null;
     
     // Constructor normal para CREAR
     public ComicForm() {
         initComponents();
+        
+        setTitle("Cheems Client - Create Comic");
+        setLocationRelativeTo(null); // Centrar pantalla
+        
         lblAction.setText("Create Comic");
     }
     
     // Constructor para MODIFICAR
-    public ComicForm(Comic comic) {
+    public ComicForm(Comic comic, ComicView parentView) {
+        setLocationRelativeTo(this);
         initComponents();
+        
+        setTitle("Cheems Client - Modify Comic");
+        setLocationRelativeTo(null); // Centrar pantalla
+        
         this.comicToModify = comic;
+        this.parentView = parentView;
         lblAction.setText("Modify Comic");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         // Precarga de datos en los campos de texto
         txtTitle.setText(comic.getTitle());
         txtDescription.setText(comic.getDescription());
         txtEditorial.setText(comic.getEditorial());
+
+        // Al cerrarse esta ventana (con OK o con la X), refresca y vuelve a mostrar ComicView y el formulario principal
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                if (parentView != null) {
+                    if (parentView.getOwner() != null) {
+                        parentView.getOwner().setVisible(true);
+                    }
+                    parentView.loadComics();
+                    parentView.setVisible(true);
+                }
+            }
+        });
     }
     
     
@@ -242,10 +269,13 @@ public class ComicForm extends javax.swing.JFrame {
             System.out.println("Respuesta: " + response.body());
             System.out.println("Codigo de estado: " + response.statusCode());
 
-            Result result = gson.fromJson(response.body(), Result.class);
+            if (response.statusCode() == 201 || response.statusCode() == 200) {
+                Comic savedComic = gson.fromJson(response.body(), Comic.class);
+                String successMsg = isModifyMode
+                        ? "Comic '" + savedComic.getTitle() + "' modificado correctamente."
+                        : "Comic '" + savedComic.getTitle() + "' registrado con ID: " + savedComic.getId();
 
-            if (result != null && result.isSuccess()) {
-                javax.swing.JOptionPane.showMessageDialog(this, result.getMessage(), "Exito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(this, successMsg, "Exito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
                 if (isModifyMode) {
                     // Cierra el formulario tras modificar para volver a la tabla
@@ -257,8 +287,7 @@ public class ComicForm extends javax.swing.JFrame {
                     txtEditorial.setText("");
                 }
             } else {
-                String errorMsg = (result != null) ? result.getMessage() : "Error desconocido en el servidor.";
-                javax.swing.JOptionPane.showMessageDialog(this, errorMsg, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(this, "Error en el servidor. Codigo: " + response.statusCode(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (IOException ex) {

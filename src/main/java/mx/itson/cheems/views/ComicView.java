@@ -4,7 +4,6 @@ package mx.itson.cheems.views;
 // @author Andrey
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -28,15 +27,20 @@ public class ComicView extends javax.swing.JDialog {
     public ComicView(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        setTitle("Cheems Client - Comic List");
+        setLocationRelativeTo(null); // Centrar pantalla
+        
         loadComics();
     }
+    
     
     
     // Lista para guardar los comics cargados desde la API
     private List<Comic> comicList = new ArrayList<>();
 
     // Metodo para cargar todos los comics en la tabla (GET /comics)
-    private void loadComics() {
+    public void loadComics() {
         try {
             // Creacion de la solicitud HTTP GET
             HttpRequest request = HttpRequest
@@ -207,7 +211,55 @@ public class ComicView extends javax.swing.JDialog {
     // Evento del boton DELETE cuando se le da clic
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
 
-        
+        int selectedRow = tblComic.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un comic de la tabla primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Comic selectedComic = comicList.get(selectedRow);
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "¿Seguro que deseas eliminar '" + selectedComic.getTitle() + "'?",
+                "Confirmar eliminacion",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            // Creacion de la solicitud HTTP DELETE
+            HttpRequest request = HttpRequest
+                    .newBuilder()
+                    .uri(URI.create("http://127.0.0.1:8000/comic/" + selectedComic.getId()))
+                    .DELETE()
+                    .build();
+
+            // Creacion del cliente HTTP
+            HttpClient client = HttpClient.newHttpClient();
+
+            // Envio y respuesta
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println("Respuesta DELETE: " + response.body());
+            System.out.println("Codigo de estado: " + response.statusCode());
+
+            if (response.statusCode() == 200) {
+                JOptionPane.showMessageDialog(this, "Comic eliminado correctamente.", "Exito", JOptionPane.INFORMATION_MESSAGE);
+                loadComics(); // Refresca la tabla al instante
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al eliminar el comic. Codigo: " + response.statusCode(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (IOException ex) {
+            System.err.println("Error de conexion o red: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error de conexion: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (InterruptedException ex) {
+            System.err.println("La operacion fue interrumpida: " + ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
         
     }//GEN-LAST:event_btnDeleteActionPerformed
 
@@ -216,7 +268,23 @@ public class ComicView extends javax.swing.JDialog {
     // Evento del boton MODIFY cuando se le da clic
     private void btnModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifyActionPerformed
 
-        
+        int selectedRow = tblComic.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un comic de la tabla primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Comic selectedComic = comicList.get(selectedRow);
+
+        // Oculta temporalmente el JDialog modal y el ComicForm original de atras
+        this.setVisible(false);
+        if (this.getOwner() != null) {
+            this.getOwner().setVisible(false);
+        }
+
+        ComicForm modifyForm = new ComicForm(selectedComic, this);
+        modifyForm.setLocationRelativeTo(this);
+        modifyForm.setVisible(true);
 
     }//GEN-LAST:event_btnModifyActionPerformed
 
