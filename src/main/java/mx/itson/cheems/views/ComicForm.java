@@ -15,16 +15,30 @@ import mx.itson.cheems.entities.Result;
 public class ComicForm extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ComicForm.class.getName());
-
-    /**
-     * Creates new form ComicsForm
-     */
+    
+    // Comic a modificar (null si se esta creando uno nuevo)
+    private Comic comicToModify = null;
+    
+    // Constructor normal para CREAR
     public ComicForm() {
         initComponents();
+        lblAction.setText("Create Comic");
     }
+    
+    // Constructor para MODIFICAR
+    public ComicForm(Comic comic) {
+        initComponents();
+        this.comicToModify = comic;
+        lblAction.setText("Modify Comic");
 
+        // Precarga de datos en los campos de texto
+        txtTitle.setText(comic.getTitle());
+        txtDescription.setText(comic.getDescription());
+        txtEditorial.setText(comic.getEditorial());
+    }
     
     
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,6 +58,7 @@ public class ComicForm extends javax.swing.JFrame {
         txtEditorial = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         btnLibrary = new javax.swing.JButton();
+        lblAction = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -100,29 +115,36 @@ public class ComicForm extends javax.swing.JFrame {
             }
         });
 
+        lblAction.setFont(new java.awt.Font("OCR A Extended", 3, 36)); // NOI18N
+        lblAction.setForeground(new java.awt.Color(255, 0, 255));
+        lblAction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblAction.setText("New Comic");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 768, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(85, 85, 85)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnLibrary))
-                        .addComponent(txtDescription)
-                        .addComponent(txtTitle)
-                        .addComponent(txtEditorial, javax.swing.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 768, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(85, 85, 85)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtDescription)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnLibrary)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 341, Short.MAX_VALUE)
+                                .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtEditorial)
+                            .addComponent(txtTitle)
+                            .addComponent(lblAction, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,6 +152,8 @@ public class ComicForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
+                .addComponent(lblAction)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -141,10 +165,10 @@ public class ComicForm extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtEditorial, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnOk)
-                    .addComponent(btnLibrary))
+                    .addComponent(btnLibrary)
+                    .addComponent(btnOk))
                 .addGap(21, 21, 21))
         );
 
@@ -175,7 +199,14 @@ public class ComicForm extends javax.swing.JFrame {
 
             // Creacion y asignacion de la entidad
             Comic comic = new Comic();
-            comic.setId(1);
+            boolean isModifyMode = (comicToModify != null);
+
+            if (isModifyMode) {
+                comic.setId(comicToModify.getId());
+            } else {
+                comic.setId(0);
+            }
+
             comic.setTitle(title);
             comic.setDescription(description);
             comic.setEditorial(editorial);
@@ -184,13 +215,23 @@ public class ComicForm extends javax.swing.JFrame {
             Gson gson = new Gson();
             String json = gson.toJson(comic);
 
-            // Creacion de la solicitud HTTP
-            HttpRequest request = HttpRequest
-                    .newBuilder()
-                    .uri(URI.create("http://127.0.0.1:8000/comic"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json))
-                    .build();
+            // Creacion de la solicitud HTTP (POST para crear, PUT para modificar)
+            HttpRequest request;
+            if (isModifyMode) {
+                request = HttpRequest
+                        .newBuilder()
+                        .uri(URI.create("http://127.0.0.1:8000/comic/" + comic.getId()))
+                        .header("Content-Type", "application/json")
+                        .PUT(HttpRequest.BodyPublishers.ofString(json))
+                        .build();
+            } else {
+                request = HttpRequest
+                        .newBuilder()
+                        .uri(URI.create("http://127.0.0.1:8000/comic"))
+                        .header("Content-Type", "application/json")
+                        .POST(HttpRequest.BodyPublishers.ofString(json))
+                        .build();
+            }
 
             // Creacion del cliente HTTP
             HttpClient client = HttpClient.newHttpClient();
@@ -205,6 +246,16 @@ public class ComicForm extends javax.swing.JFrame {
 
             if (result != null && result.isSuccess()) {
                 javax.swing.JOptionPane.showMessageDialog(this, result.getMessage(), "Exito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+                if (isModifyMode) {
+                    // Cierra el formulario tras modificar para volver a la tabla
+                    this.dispose();
+                } else {
+                    // Limpia los campos tras crear un nuevo registro
+                    txtTitle.setText("");
+                    txtDescription.setText("");
+                    txtEditorial.setText("");
+                }
             } else {
                 String errorMsg = (result != null) ? result.getMessage() : "Error desconocido en el servidor.";
                 javax.swing.JOptionPane.showMessageDialog(this, errorMsg, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -267,6 +318,7 @@ public class ComicForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblAction;
     private javax.swing.JTextField txtDescription;
     private javax.swing.JTextField txtEditorial;
     private javax.swing.JTextField txtTitle;
