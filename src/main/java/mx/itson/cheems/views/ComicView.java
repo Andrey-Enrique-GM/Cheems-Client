@@ -3,6 +3,21 @@ package mx.itson.cheems.views;
 
 // @author Andrey
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import mx.itson.cheems.entities.Comic;
+
+
 public class ComicView extends javax.swing.JDialog {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ComicView.class.getName());
@@ -13,6 +28,61 @@ public class ComicView extends javax.swing.JDialog {
     public ComicView(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        loadComics();
+    }
+    
+    
+    // Lista para guardar los comics cargados desde la API
+    private List<Comic> comicList = new ArrayList<>();
+
+    // Metodo para cargar todos los comics en la tabla (GET /comics)
+    private void loadComics() {
+        try {
+            // Creacion de la solicitud HTTP GET
+            HttpRequest request = HttpRequest
+                    .newBuilder()
+                    .uri(URI.create("http://127.0.0.1:8000/comics"))
+                    .GET()
+                    .build();
+
+            // Creacion del cliente HTTP
+            HttpClient client = HttpClient.newHttpClient();
+
+            // Envio y respuesta
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println("Respuesta GET /comics: " + response.body());
+            System.out.println("Codigo de estado: " + response.statusCode());
+
+            if (response.statusCode() == 200) {
+                // Conversion de JSON a Lista de Comic usando GSON
+                Gson gson = new Gson();
+                Comic[] comicsArray = gson.fromJson(response.body(), Comic[].class);
+                comicList = Arrays.asList(comicsArray);
+
+                // Limpiar y llenar el modelo de la tabla
+                DefaultTableModel model = (DefaultTableModel) tblComic.getModel();
+                model.setRowCount(0);
+
+                for (Comic c : comicList) {
+                    model.addRow(new Object[]{
+                        c.getId(),
+                        c.getTitle(),
+                        c.getDescription(),
+                        c.getEditorial()
+                    });
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al cargar los comics. Codigo: " + response.statusCode(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (IOException ex) {
+            System.err.println("Error de conexion o red: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error de conexion: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (InterruptedException ex) {
+            System.err.println("La operacion fue interrumpida: " + ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
     }
 
     
