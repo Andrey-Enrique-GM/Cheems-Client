@@ -86,6 +86,10 @@ public class ComicForm extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         btnLibrary = new javax.swing.JButton();
         lblAction = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        btnComic = new javax.swing.JMenu();
+        btnNovel = new javax.swing.JMenu();
+        btnManga = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -120,7 +124,7 @@ public class ComicForm extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setIcon(new javax.swing.ImageIcon("C:\\Users\\Propietario\\Downloads\\1688999840_new_welcome!.gif")); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon("C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\kangel welcome.gif")); // NOI18N
 
         txtEditorial.setBackground(new java.awt.Color(153, 255, 255));
         txtEditorial.setFont(new java.awt.Font("OCR A Extended", 1, 24)); // NOI18N
@@ -180,7 +184,7 @@ public class ComicForm extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
                 .addComponent(lblAction)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -198,6 +202,23 @@ public class ComicForm extends javax.swing.JFrame {
                     .addComponent(btnOk))
                 .addGap(21, 21, 21))
         );
+
+        btnComic.setBackground(new java.awt.Color(255, 0, 255));
+        btnComic.setText("Comic");
+        btnComic.setFont(new java.awt.Font("OCR A Extended", 1, 14)); // NOI18N
+        jMenuBar1.add(btnComic);
+
+        btnNovel.setBackground(new java.awt.Color(255, 0, 255));
+        btnNovel.setText("Novel");
+        btnNovel.setFont(new java.awt.Font("OCR A Extended", 1, 14)); // NOI18N
+        jMenuBar1.add(btnNovel);
+
+        btnManga.setBackground(new java.awt.Color(255, 0, 255));
+        btnManga.setText("Manga");
+        btnManga.setFont(new java.awt.Font("OCR A Extended", 1, 14)); // NOI18N
+        jMenuBar1.add(btnManga);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -340,12 +361,16 @@ public class ComicForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu btnComic;
     private javax.swing.JButton btnLibrary;
+    private javax.swing.JMenu btnManga;
+    private javax.swing.JMenu btnNovel;
     private javax.swing.JButton btnOk;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAction;
     private javax.swing.JTextField txtDescription;

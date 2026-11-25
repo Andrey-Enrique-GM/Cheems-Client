@@ -123,7 +123,7 @@ public class ComicView extends javax.swing.JDialog {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Propietario\\Downloads\\kangel medium widget.jpg")); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\kangel banner.jpg")); // NOI18N
 
         tblComic.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
