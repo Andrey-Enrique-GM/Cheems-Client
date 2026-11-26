@@ -61,7 +61,7 @@ public class LibraryForm extends javax.swing.JFrame {
     
     
     // Constructor para MODIFICAR
-    public LibraryForm(Comic comic, LibraryView parentView) {
+    public LibraryForm(Comic comic, LibraryView parentView, String category) {
         setLocationRelativeTo(this);
         initComponents();
         
@@ -72,6 +72,7 @@ public class LibraryForm extends javax.swing.JFrame {
         this.parentView = parentView;
         lblAction.setText("Modify Comic");
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setCategory(category); // Aplica el banner, titulo y paleta de colores
 
         // Precarga de datos en los campos de texto
         txtTitle.setText(comic.getTitle());
@@ -86,7 +87,7 @@ public class LibraryForm extends javax.swing.JFrame {
                     if (parentView.getOwner() != null) {
                         parentView.getOwner().setVisible(true);
                     }
-                    parentView.loadComics();
+                    parentView.loadItems();
                     parentView.setVisible(true);
                 }
             }
@@ -106,23 +107,23 @@ public class LibraryForm extends javax.swing.JFrame {
             case "Novel" -> {
                 lblBanner.setIcon(new javax.swing.ImageIcon(BANNER_NOVEL));
                 applyTheme(
-                    new java.awt.Color(180, 40, 120),   // Títulos y OK (Púrpura/Vino)
+                    new java.awt.Color(180, 40, 120),   // Titulos y OK (Purpura/Vino)
                     new java.awt.Color(230, 204, 255),  // Fondo inputs y LIBRARY (Lavanda)
-                    new java.awt.Color(75, 0, 130)      // Bordes y texto LIBRARY (Índigo oscuro)
+                    new java.awt.Color(75, 0, 130)      // Bordes y texto LIBRARY (Indigo)
                 );
             }
             case "Manga" -> {
                 lblBanner.setIcon(new javax.swing.ImageIcon(BANNER_MANGA));
                 applyTheme(
-                    new java.awt.Color(255, 80, 170),   // Títulos y OK (Rosa chicle/fucsia)
+                    new java.awt.Color(255, 80, 170),   // Titulos y OK (Rosa chicle/fucsia)
                     new java.awt.Color(175, 238, 238),  // Fondo inputs y LIBRARY (Verde menta/Aqua)
-                    new java.awt.Color(0, 128, 145)     // Bordes y texto LIBRARY (Cerceta/Teal oscuro)
+                    new java.awt.Color(0, 128, 145)     // Bordes y texto LIBRARY (Cerceta)
                 );
             }
-            default -> { // Comic (KAngel)
+            default -> { // Comic
                 lblBanner.setIcon(new javax.swing.ImageIcon(BANNER_COMIC));
                 applyTheme(
-                    new java.awt.Color(255, 0, 255),    // Títulos y OK (Magenta)
+                    new java.awt.Color(255, 0, 255),    // Titulos y OK (Magenta)
                     new java.awt.Color(153, 255, 255),  // Fondo inputs y LIBRARY (Cian)
                     new java.awt.Color(51, 102, 255)    // Bordes y texto LIBRARY (Azul)
                 );
@@ -428,7 +429,7 @@ public class LibraryForm extends javax.swing.JFrame {
     // Evento del boton LIBRARY cuando se le da clic
     private void btnLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLibraryActionPerformed
         
-        LibraryView library = new LibraryView(this, true);
+        LibraryView library = new LibraryView(this, true, this.currentCategory);
         library.setLocationRelativeTo(this);
         library.setVisible(true);
         

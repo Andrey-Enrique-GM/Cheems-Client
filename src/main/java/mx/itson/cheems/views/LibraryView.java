@@ -21,17 +21,136 @@ public class LibraryView extends javax.swing.JDialog {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LibraryView.class.getName());
 
-    /**
-     * Creates new form ComicView
-     */
+    // Categoria actual
+    private String currentCategory = "Comic"; // Por defecto Comic
+    private List<Comic> itemList = new ArrayList<>(); // Array de Comics
+
+    // Rutas de los banners personalizados
+    private static final String BANNER_COMIC = "C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\kangel banner 5.jpg";
+    private static final String BANNER_NOVEL = "C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\ame banner.jpg";
+    private static final String BANNER_MANGA = "C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\lacey banner 2.jpg";
+
+    
+    
+    // Constructor por defecto
     public LibraryView(java.awt.Frame parent, boolean modal) {
+        this(parent, modal, "Comic");
+    }
+
+    // Constructor principal que recibe la categoria desde LibraryForm
+    public LibraryView(java.awt.Frame parent, boolean modal, String category) {
         super(parent, modal);
         initComponents();
-        
-        setTitle("Cheems Client - Comic List");
-        setLocationRelativeTo(null); // Centrar pantalla
-        
-        loadComics();
+        setLocationRelativeTo(null);
+        setCategory(category);
+    }
+
+    
+    
+    private void setCategory(String category) {
+        this.currentCategory = category;
+        setTitle("Cheems Client - " + category + " List");
+
+        switch (category) {
+            case "Novel" -> {
+                lblBanner.setIcon(new javax.swing.ImageIcon(BANNER_NOVEL));
+                applyTheme(
+                    new java.awt.Color(180, 40, 120),   // DELETE y seleccion (Purpura/Vino)
+                    new java.awt.Color(230, 204, 255),  // MODIFY fondo (Lavanda)
+                    new java.awt.Color(75, 0, 130)      // Bordes, texto MODIFY y header tabla (Indigo)
+                );
+            }
+            case "Manga" -> {
+                lblBanner.setIcon(new javax.swing.ImageIcon(BANNER_MANGA));
+                applyTheme(
+                    new java.awt.Color(255, 80, 170),   // DELETE y seleccion (Rosa chicle/fucsia)
+                    new java.awt.Color(175, 238, 238),  // MODIFY fondo (Verde menta/Aqua)
+                    new java.awt.Color(0, 128, 145)     // Bordes, texto MODIFY y header tabla (Cerceta)
+                );
+            }
+            default -> { // Comic
+                lblBanner.setIcon(new javax.swing.ImageIcon(BANNER_COMIC));
+                applyTheme(
+                    new java.awt.Color(255, 0, 255),    // DELETE y seleccion (Magenta)
+                    new java.awt.Color(153, 255, 255),  // MODIFY fondo (Cian)
+                    new java.awt.Color(51, 102, 255)    // Bordes, texto MODIFY y header tabla (Azul)
+                );
+            }
+        }
+
+        loadItems();
+    }
+
+    
+    
+    private void applyTheme(java.awt.Color primary, java.awt.Color secondary, java.awt.Color borderAndText) {
+        // Boton DELETE
+        btnDelete.setBackground(primary);
+
+        // Boton MODIFY
+        btnModify.setBackground(secondary);
+        btnModify.setForeground(borderAndText);
+
+        // Estilo de la tabla para que combine con el tema
+        tblLibrary.setSelectionBackground(primary);
+        tblLibrary.setSelectionForeground(java.awt.Color.WHITE);
+        tblLibrary.setGridColor(borderAndText);
+        tblLibrary.getTableHeader().setBackground(secondary);
+        tblLibrary.getTableHeader().setForeground(borderAndText);
+
+        // Bordes BevelBorder en banner, scroll de tabla y botones
+        javax.swing.border.Border customBorder = javax.swing.BorderFactory.createBevelBorder(
+            javax.swing.border.BevelBorder.RAISED,
+            borderAndText, borderAndText, borderAndText, borderAndText
+        );
+
+        lblBanner.setBorder(customBorder);
+        jScrollPane1.setBorder(customBorder);
+        btnModify.setBorder(customBorder);
+        btnDelete.setBorder(customBorder);
+    }
+
+    
+    
+    // Metodo dinamico para cargar comics, novels o mangas segun currentCategory
+    public void loadItems() {
+        String endpoint = currentCategory.toLowerCase() + "s"; // "comics", "novels" o "mangas"
+
+        try {
+            HttpRequest request = HttpRequest
+                    .newBuilder()
+                    .uri(URI.create("http://127.0.0.1:8000/" + endpoint))
+                    .GET()
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                Gson gson = new Gson();
+                Comic[] itemsArray = gson.fromJson(response.body(), Comic[].class);
+                itemList = Arrays.asList(itemsArray);
+
+                DefaultTableModel model = (DefaultTableModel) tblLibrary.getModel();
+                model.setRowCount(0);
+
+                for (Comic item : itemList) {
+                    model.addRow(new Object[]{
+                        item.getId(),
+                        item.getTitle(),
+                        item.getDescription(),
+                        item.getEditorial()
+                    });
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al cargar " + endpoint + ". Codigo: " + response.statusCode(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Error de conexion: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
     }
     
     
@@ -123,7 +242,8 @@ public class LibraryView extends javax.swing.JDialog {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        lblBanner.setIcon(new javax.swing.ImageIcon("C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\kangel banner.jpg")); // NOI18N
+        lblBanner.setIcon(new javax.swing.ImageIcon("C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\kangel banner 5.jpg")); // NOI18N
+        lblBanner.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.blue, java.awt.Color.blue, java.awt.Color.blue, java.awt.Color.blue));
 
         tblLibrary.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -166,14 +286,17 @@ public class LibraryView extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(btnModify, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblBanner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(btnModify, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(lblBanner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(7, Short.MAX_VALUE))
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,7 +316,7 @@ public class LibraryView extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -281,9 +404,9 @@ public class LibraryView extends javax.swing.JDialog {
             this.getOwner().setVisible(false);
         }
 
-        LibraryForm modifyForm = new LibraryForm(selectedComic, this);
-        modifyForm.setLocationRelativeTo(this);
-        modifyForm.setVisible(true);
+        //LibraryForm modifyForm = new LibraryForm(selectedComic, this);
+        //modifyForm.setLocationRelativeTo(this);
+        //modifyForm.setVisible(true);
 
     }//GEN-LAST:event_btnModifyActionPerformed
 
