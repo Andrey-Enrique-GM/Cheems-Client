@@ -17,14 +17,14 @@ import javax.swing.table.DefaultTableModel;
 import mx.itson.cheems.entities.Comic;
 
 
-public class ComicView extends javax.swing.JDialog {
+public class LibraryView extends javax.swing.JDialog {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ComicView.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LibraryView.class.getName());
 
     /**
      * Creates new form ComicView
      */
-    public ComicView(java.awt.Frame parent, boolean modal) {
+    public LibraryView(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         
@@ -65,7 +65,7 @@ public class ComicView extends javax.swing.JDialog {
                 comicList = Arrays.asList(comicsArray);
 
                 // Limpiar y llenar el modelo de la tabla
-                DefaultTableModel model = (DefaultTableModel) tblComic.getModel();
+                DefaultTableModel model = (DefaultTableModel) tblLibrary.getModel();
                 model.setRowCount(0);
 
                 for (Comic c : comicList) {
@@ -102,9 +102,9 @@ public class ComicView extends javax.swing.JDialog {
 
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        lblBanner = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblComic = new javax.swing.JTable();
+        tblLibrary = new javax.swing.JTable();
         btnDelete = new javax.swing.JButton();
         btnModify = new javax.swing.JButton();
 
@@ -123,9 +123,9 @@ public class ComicView extends javax.swing.JDialog {
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\kangel banner.jpg")); // NOI18N
+        lblBanner.setIcon(new javax.swing.ImageIcon("C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\kangel banner.jpg")); // NOI18N
 
-        tblComic.setModel(new javax.swing.table.DefaultTableModel(
+        tblLibrary.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -136,7 +136,7 @@ public class ComicView extends javax.swing.JDialog {
                 "ID", "Title", "Description", "Editorial"
             }
         ));
-        jScrollPane1.setViewportView(tblComic);
+        jScrollPane1.setViewportView(tblLibrary);
 
         btnDelete.setBackground(new java.awt.Color(255, 0, 255));
         btnDelete.setFont(new java.awt.Font("OCR A Extended", 1, 36)); // NOI18N
@@ -166,21 +166,20 @@ public class ComicView extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 456, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                            .addComponent(btnModify, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(btnModify, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(lblBanner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(7, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(lblBanner)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -194,7 +193,7 @@ public class ComicView extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -211,7 +210,7 @@ public class ComicView extends javax.swing.JDialog {
     // Evento del boton DELETE cuando se le da clic
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
 
-        int selectedRow = tblComic.getSelectedRow();
+        int selectedRow = tblLibrary.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Selecciona un comic de la tabla primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
@@ -268,7 +267,7 @@ public class ComicView extends javax.swing.JDialog {
     // Evento del boton MODIFY cuando se le da clic
     private void btnModifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifyActionPerformed
 
-        int selectedRow = tblComic.getSelectedRow();
+        int selectedRow = tblLibrary.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Selecciona un comic de la tabla primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
@@ -276,13 +275,13 @@ public class ComicView extends javax.swing.JDialog {
 
         Comic selectedComic = comicList.get(selectedRow);
 
-        // Oculta temporalmente el JDialog modal y el ComicForm original de atras
+        // Oculta temporalmente el JDialog modal y el LibraryForm original de atras
         this.setVisible(false);
         if (this.getOwner() != null) {
             this.getOwner().setVisible(false);
         }
 
-        ComicForm modifyForm = new ComicForm(selectedComic, this);
+        LibraryForm modifyForm = new LibraryForm(selectedComic, this);
         modifyForm.setLocationRelativeTo(this);
         modifyForm.setVisible(true);
 
@@ -315,7 +314,7 @@ public class ComicView extends javax.swing.JDialog {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                ComicView dialog = new ComicView(new javax.swing.JFrame(), true);
+                LibraryView dialog = new LibraryView(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -330,10 +329,10 @@ public class ComicView extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnModify;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblComic;
+    private javax.swing.JLabel lblBanner;
+    private javax.swing.JTable tblLibrary;
     // End of variables declaration//GEN-END:variables
 }

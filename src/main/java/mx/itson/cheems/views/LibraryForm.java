@@ -12,27 +12,56 @@ import mx.itson.cheems.entities.Result;
 
 // @author Andrey
 
-public class ComicForm extends javax.swing.JFrame {
+public class LibraryForm extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ComicForm.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LibraryForm.class.getName());
     
     // Comic a modificar (null si se esta creando uno nuevo)
     private Comic comicToModify = null;
-    // Referencia a ComicView para refrescar la tabla al terminar de modificar
-    private ComicView parentView = null;
+    // Referencia a LibraryView para refrescar la tabla al terminar de modificar
+    private LibraryView parentView = null;
+    
+    // Categoria actual
+    private String currentCategory = "Comic"; // Por defecto Comic
+    
+    // Rutas de los banners personalizados
+    private static final String BANNER_COMIC = "C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\kangel welcome.gif";
+    private static final String BANNER_NOVEL = "C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\ame welcome.gif";
+    private static final String BANNER_MANGA = "C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\lacey welcome.gif";
+    
+    
     
     // Constructor normal para CREAR
-    public ComicForm() {
+    public LibraryForm() {
         initComponents();
-        
-        setTitle("Cheems Client - Create Comic");
         setLocationRelativeTo(null); // Centrar pantalla
-        
-        lblAction.setText("Create Comic");
+        setCategory("Comic"); // Inicializa textos y banner por defecto
+
+        btnComic.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setCategory("Comic");
+            }
+        });
+
+        btnNovel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setCategory("Novel");
+            }
+        });
+
+        btnManga.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                setCategory("Manga");
+            }
+        });
     }
     
+    
     // Constructor para MODIFICAR
-    public ComicForm(Comic comic, ComicView parentView) {
+    public LibraryForm(Comic comic, LibraryView parentView) {
         setLocationRelativeTo(this);
         initComponents();
         
@@ -49,7 +78,7 @@ public class ComicForm extends javax.swing.JFrame {
         txtDescription.setText(comic.getDescription());
         txtEditorial.setText(comic.getEditorial());
 
-        // Al cerrarse esta ventana (con OK o con la X), refresca y vuelve a mostrar ComicView y el formulario principal
+        // Al cerrarse esta ventana (con OK o con la X), refresca y vuelve a mostrar LibraryView y el formulario principal
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
@@ -62,6 +91,78 @@ public class ComicForm extends javax.swing.JFrame {
                 }
             }
         });
+    }
+    
+    
+    
+    private void setCategory(String category) {
+        this.currentCategory = category;
+        String actionPrefix = (comicToModify != null) ? "Modify " : "Create ";
+
+        lblAction.setText(actionPrefix + category);
+        setTitle("Cheems Client - " + actionPrefix + category);
+
+        switch (category) {
+            case "Novel" -> {
+                lblBanner.setIcon(new javax.swing.ImageIcon(BANNER_NOVEL));
+                applyTheme(
+                    new java.awt.Color(180, 40, 120),   // Títulos y OK (Púrpura/Vino)
+                    new java.awt.Color(230, 204, 255),  // Fondo inputs y LIBRARY (Lavanda)
+                    new java.awt.Color(75, 0, 130)      // Bordes y texto LIBRARY (Índigo oscuro)
+                );
+            }
+            case "Manga" -> {
+                lblBanner.setIcon(new javax.swing.ImageIcon(BANNER_MANGA));
+                applyTheme(
+                    new java.awt.Color(255, 80, 170),   // Títulos y OK (Rosa chicle/fucsia)
+                    new java.awt.Color(175, 238, 238),  // Fondo inputs y LIBRARY (Verde menta/Aqua)
+                    new java.awt.Color(0, 128, 145)     // Bordes y texto LIBRARY (Cerceta/Teal oscuro)
+                );
+            }
+            default -> { // Comic (KAngel)
+                lblBanner.setIcon(new javax.swing.ImageIcon(BANNER_COMIC));
+                applyTheme(
+                    new java.awt.Color(255, 0, 255),    // Títulos y OK (Magenta)
+                    new java.awt.Color(153, 255, 255),  // Fondo inputs y LIBRARY (Cian)
+                    new java.awt.Color(51, 102, 255)    // Bordes y texto LIBRARY (Azul)
+                );
+            }
+        }
+    }
+
+    
+    
+    private void applyTheme(java.awt.Color primary, java.awt.Color secondary, java.awt.Color borderAndText) {
+        // Titulos y boton OK
+        lblAction.setForeground(primary);
+        jLabel1.setForeground(primary);
+        jLabel2.setForeground(primary);
+        jLabel4.setForeground(primary);
+        btnOk.setBackground(primary);
+
+        // Fondos y boton LIBRARY
+        txtTitle.setBackground(secondary);
+        txtDescription.setBackground(secondary);
+        txtEditorial.setBackground(secondary);
+        btnLibrary.setBackground(secondary);
+
+        // Texto de inputs y boton LIBRARY
+        txtTitle.setForeground(borderAndText);
+        txtDescription.setForeground(borderAndText);
+        txtEditorial.setForeground(borderAndText);
+        btnLibrary.setForeground(borderAndText);
+
+        // Bordes BevelBorder
+        javax.swing.border.Border customBorder = javax.swing.BorderFactory.createBevelBorder(
+            javax.swing.border.BevelBorder.RAISED,
+            borderAndText, borderAndText, borderAndText, borderAndText
+        );
+
+        txtTitle.setBorder(customBorder);
+        txtDescription.setBorder(customBorder);
+        txtEditorial.setBorder(customBorder);
+        btnLibrary.setBorder(customBorder);
+        btnOk.setBorder(customBorder);
     }
     
     
@@ -81,7 +182,7 @@ public class ComicForm extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         btnOk = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        lblBanner = new javax.swing.JLabel();
         txtEditorial = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         btnLibrary = new javax.swing.JButton();
@@ -124,7 +225,7 @@ public class ComicForm extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setIcon(new javax.swing.ImageIcon("C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\kangel welcome.gif")); // NOI18N
+        lblBanner.setIcon(new javax.swing.ImageIcon("C:\\Users\\Propietario\\Documents\\ELEMENTOS\\banners\\kangel welcome.gif")); // NOI18N
 
         txtEditorial.setBackground(new java.awt.Color(153, 255, 255));
         txtEditorial.setFont(new java.awt.Font("OCR A Extended", 1, 24)); // NOI18N
@@ -159,7 +260,7 @@ public class ComicForm extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 768, Short.MAX_VALUE))
+                        .addComponent(lblBanner, javax.swing.GroupLayout.DEFAULT_SIZE, 768, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(85, 85, 85)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -181,7 +282,7 @@ public class ComicForm extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3)
+                .addComponent(lblBanner)
                 .addGap(18, 18, 18)
                 .addComponent(lblAction)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -327,7 +428,7 @@ public class ComicForm extends javax.swing.JFrame {
     // Evento del boton LIBRARY cuando se le da clic
     private void btnLibraryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLibraryActionPerformed
         
-        ComicView library = new ComicView(this, true);
+        LibraryView library = new LibraryView(this, true);
         library.setLocationRelativeTo(this);
         library.setVisible(true);
         
@@ -357,7 +458,7 @@ public class ComicForm extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ComicForm().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new LibraryForm().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -368,11 +469,11 @@ public class ComicForm extends javax.swing.JFrame {
     private javax.swing.JButton btnOk;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAction;
+    private javax.swing.JLabel lblBanner;
     private javax.swing.JTextField txtDescription;
     private javax.swing.JTextField txtEditorial;
     private javax.swing.JTextField txtTitle;

@@ -3,7 +3,7 @@ package mx.itson.cheems.app;
 
 // @author Andrey
 
-import mx.itson.cheems.views.ComicForm;
+import mx.itson.cheems.views.LibraryForm;
 
 
 public class App 
@@ -13,7 +13,7 @@ public class App
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                ComicForm form = new ComicForm();
+                LibraryForm form = new LibraryForm();
                 form.setVisible(true);
                 form.setLocationRelativeTo(null); // Centra la ventana en la pantalla
             }
