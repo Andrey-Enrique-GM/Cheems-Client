@@ -348,36 +348,39 @@ public class LibraryForm extends javax.swing.JFrame {
             String editorial = txtEditorial.getText();
 
             // Creacion y asignacion de la entidad
-            Comic comic = new Comic();
+            Comic item = new Comic();
             boolean isModifyMode = (comicToModify != null);
 
             if (isModifyMode) {
-                comic.setId(comicToModify.getId());
+                item.setId(comicToModify.getId());
             } else {
-                comic.setId(0);
+                item.setId(0);
             }
 
-            comic.setTitle(title);
-            comic.setDescription(description);
-            comic.setEditorial(editorial);
+            item.setTitle(title);
+            item.setDescription(description);
+            item.setEditorial(editorial);
 
             // Conversion a JSON usando GSON
             Gson gson = new Gson();
-            String json = gson.toJson(comic);
+            String json = gson.toJson(item);
+
+            // Endpoint dinamico: "comic", "novel" o "manga"
+            String endpoint = currentCategory.toLowerCase();
 
             // Creacion de la solicitud HTTP (POST para crear, PUT para modificar)
             HttpRequest request;
             if (isModifyMode) {
                 request = HttpRequest
                         .newBuilder()
-                        .uri(URI.create("http://127.0.0.1:8000/comic/" + comic.getId()))
+                        .uri(URI.create("http://127.0.0.1:8000/" + endpoint + "/" + item.getId()))
                         .header("Content-Type", "application/json")
                         .PUT(HttpRequest.BodyPublishers.ofString(json))
                         .build();
             } else {
                 request = HttpRequest
                         .newBuilder()
-                        .uri(URI.create("http://127.0.0.1:8000/comic"))
+                        .uri(URI.create("http://127.0.0.1:8000/" + endpoint))
                         .header("Content-Type", "application/json")
                         .POST(HttpRequest.BodyPublishers.ofString(json))
                         .build();
@@ -389,14 +392,14 @@ public class LibraryForm extends javax.swing.JFrame {
             // Envio y respuesta
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("Respuesta: " + response.body());
+            System.out.println("Respuesta (" + endpoint + "): " + response.body());
             System.out.println("Codigo de estado: " + response.statusCode());
 
             if (response.statusCode() == 201 || response.statusCode() == 200) {
-                Comic savedComic = gson.fromJson(response.body(), Comic.class);
+                Comic savedItem = gson.fromJson(response.body(), Comic.class);
                 String successMsg = isModifyMode
-                        ? "Comic '" + savedComic.getTitle() + "' modificado correctamente."
-                        : "Comic '" + savedComic.getTitle() + "' registrado con ID: " + savedComic.getId();
+                        ? currentCategory + " '" + savedItem.getTitle() + "' modificado correctamente"
+                        : currentCategory + " '" + savedItem.getTitle() + "' registrado con ID: " + savedItem.getId();
 
                 javax.swing.JOptionPane.showMessageDialog(this, successMsg, "Exito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
